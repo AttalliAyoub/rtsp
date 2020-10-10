@@ -1,5 +1,5 @@
 #include <GLFW/glfw3.h>
-#include "load_frame.hpp"
+#include "video_reader.hpp"
 
 // const char* videoPath = "C:/Users/snake/Downloads/Video/ash.mp4";
 const char* videoPath ="C:/Users/snake/Downloads/Video/Jordan Smith - Chandelier, Full Blind Audition - YouTube.mkv";
@@ -18,13 +18,26 @@ int main() {
 		return 1;
 	}
 
-	// Allocate frame buffer
-	int frame_width, frame_height;
-	uint8_t* frame_data;
-	if (!load_frame(videoPath, &frame_width, &frame_height, &frame_data)) {
-		cout << "you could't load frame" << endl;
+	VideoReaderState vr_state;
+	if (!video_reader_open(&vr_state, videoPath)) {
+		cout << "couldn't open file\n";
 		return 1;
 	}
+
+	const int frame_width = vr_state.width, frame_height = vr_state.height;
+	// 
+	uint8_t* frame_data = new uint8_t[frame_width * frame_height * 4];
+	if (!video_reader_read_frame(&vr_state, frame_data)) {
+		cout << "couldn't reade frame\n";
+		return 1;
+	}
+
+	video_reader_close(&vr_state);
+
+	// if (!load_frame(videoPath, &frame_width, &frame_height, &frame_data)) {
+	// 	cout << "you could't load frame" << endl;
+	// 	return 1;
+	// }
 
 	glfwMakeContextCurrent(window);
 
