@@ -33,11 +33,17 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3  REQUIRED)
 find_package(FFmpeg REQUIRED)
 
-find_path(AVCODEC_INCLUDE_DIR libavcodec/avcodec.h)
 find_library(AVCODEC_LIBRARY avcodec)
-
-find_path(AVFORMAT_INCLUDE_DIR libavformat/avformat.h)
 find_library(AVFORMAT_LIBRARY avformat)
+find_library(SWSCALE_LIBRARY swscale)
+
+find_library(AVCODEC_LIBRARY     avcodec)
+find_library(AVFORMAT_LIBRARY    avformat)
+find_library(AVFILTER_LIBRARY    avfilter)
+find_library(AVDEVICE_LIBRARY    avdevice)
+find_library(AVUTIL_LIBRARY      avutil)
+find_library(SWRESAMPLE_LIBRARY  swresample)
+find_library(SWSCALE_LIBRARY     swscale)
 
 set(CXX_SRC_EXT_PATTERN ".cpp")
 set(C_SRC_EXT_PATTERN ".c")
@@ -56,7 +62,8 @@ add_executable(rtsp ${SRC_FILES} ${HDR_FILES})
 
 target_include_directories(rtsp 
 	PRIVATE
-        ${OPENGL_INCLUDE_DIRS} ${GLFW3_INCLUDE_PATH}
+        ${OPENGL_INCLUDE_DIRS}
+        ${GLFW3_INCLUDE_PATH}
         ${FFMPEG_INCLUDE_DIRS}
             ${AVCODEC_INCLUDE_DIR}
             ${AVFORMAT_INCLUDE_DIR}
@@ -92,12 +99,17 @@ target_link_libraries(rtsp
     PRIVATE
         ${OPENGL_LIBRARIES}
         ${GLFW_LIBRARIES}
+        glfw
         ${FFMPEG_LIBRARIES}
             ${AVCODEC_LIBRARY}
             ${AVFORMAT_LIBRARY}
+            ${AVFILTER_LIBRARY}
+            ${AVDEVICE_LIBRARY}
+            ${AVUTIL_LIBRARY}
+            ${SWRESAMPLE_LIBRARY}
+            ${SWSCALE_LIBRARY}
         # ${SWSCALE_LIBRARIES}
         # ${AVDEVICE_LIBRARIES}
         # ${AVFILTER_LIBRARIES}
         ${EXTRA_LIBS}
 )
-

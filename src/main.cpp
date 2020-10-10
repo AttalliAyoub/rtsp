@@ -1,30 +1,8 @@
-#include <iostream>
 #include <GLFW/glfw3.h>
+#include "load_frame.hpp"
 
-extern "C" {
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <inttypes.h>
-}
-
-using namespace std;
-
-const char* videoPath = "C:/Users/snake/Downloads/Video/ash.mp4";
-
-
-bool load_frame(const char* filePath, int* with, int* height, unsigned char** data) {
-	AVFormatContext* av_format_ctx = avformat_alloc_context();
-	if (!av_format_ctx) {
-		cout << "couldn't allocat avformat\n";
-		return false;
-	}
-	if (avformat_open_input(&av_format_ctx, filePath, NULL, NULL) != 0) {
-		cout << "couldn't open file\n";
-		return false;
-	}
-
-	return false;
-}
+// const char* videoPath = "C:/Users/snake/Downloads/Video/ash.mp4";
+const char* videoPath ="C:/Users/snake/Downloads/Video/Jordan Smith - Chandelier, Full Blind Audition - YouTube.mkv";
 
 int main() {
 	GLFWwindow* window;
@@ -42,7 +20,7 @@ int main() {
 
 	// Allocate frame buffer
 	int frame_width, frame_height;
-	unsigned char* frame_data;
+	uint8_t* frame_data;
 	if (!load_frame(videoPath, &frame_width, &frame_height, &frame_data)) {
 		cout << "you could't load frame" << endl;
 		return 1;
@@ -59,7 +37,7 @@ int main() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, frame_width, frame_height, 0, GL_RGB, GL_UNSIGNED_BYTE, frame_data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, frame_width, frame_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, frame_data);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
